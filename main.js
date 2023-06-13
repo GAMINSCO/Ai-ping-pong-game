@@ -23,8 +23,23 @@ var ball = {
 
 function setup() {
   var canvas = createCanvas(700, 600);
+
+  var video = createCapture(VIDEO);
+  video.size(600, 500);
+  video.position(375, 1000);
+
+  posenet = ml5.poseNet(video, modelLoaded);
+  posenet.on('pose', gotPoses);
 }
 
+function gotPoses(result) {
+  var Y = result[0].pose.rightWrist.y;
+  console.log(Y);
+}
+
+function modelLoaded() {
+  console.log("model loaded");
+}
 
 function draw() {
 
@@ -72,16 +87,15 @@ function draw() {
 //function reset when ball does not come in the contact of paddle
 function reset() {
   ball.x = width / 2 + 100,
-    ball.y = height / 2 + 100;
+  ball.y = height / 2 + 100;
   ball.dx = 3;
   ball.dy = 3;
-
 }
 
 
 //function midline draw a line in center
 function midline() {
-  for (i = 0; i < 480; i += 10) {
+  for (i = 0; i < 480; i += 30) {
     var y = 0;
     fill("white");
     stroke(0);
