@@ -21,27 +21,49 @@ var ball = {
   dy: 3
 }
 
+var Y = "";
+var X = "";
+var gameStatus = false;
+var scoreRightWrist = "";
+
+
+
 function setup() {
   var canvas = createCanvas(700, 600);
 
-  var video = createCapture(VIDEO);
+  video = createCapture(VIDEO);
   video.size(600, 500);
   video.position(375, 1000);
+  video.hide();
+  canvas.parent("canvas");
 
   posenet = ml5.poseNet(video, modelLoaded);
   posenet.on('pose', gotPoses);
 }
 
 function gotPoses(result) {
-  var Y = result[0].pose.rightWrist.y;
-  console.log(Y);
+  if(result.length > 0) {
+  Y = (result[0].pose.rightWrist.y).toFixed(2);
+  X = (result[0].pose.rightWrist.x).toFixed(2);
+  scoreRightWrist = (result[0].pose.keypoints[10].score).toFixed(2);
+  console.log("Y = " + Y + " X = " + X + " score = " + scoreRightWrist);
+  }
 }
 
 function modelLoaded() {
   console.log("model loaded");
 }
 
+function start() {
+  document.getElementById("status").innerHTML = "Starting Game";
+  gameStatus = true;
+}
+
 function draw() {
+
+  if(gameStatus == true) {
+
+    image(video, 0, 0, 700, 600);
 
   background(0);
 
@@ -52,6 +74,12 @@ function draw() {
   fill("black");
   stroke("black");
   rect(0, 0, 20, 700);
+
+  if (scoreRightWrist > 0.2) {
+  fill("red");
+  stroke("red");
+  circle(X, Y, 500);
+  }
 
   //funtion paddleInCanvas call 
   paddleInCanvas();
@@ -80,6 +108,7 @@ function draw() {
 
   //function move call which in very important
   move();
+  }
 }
 
 
