@@ -42,11 +42,11 @@ function setup() {
 }
 
 function gotPoses(result) {
-  if(result.length > 0) {
-  Y = (result[0].pose.rightWrist.y).toFixed(2);
-  X = (result[0].pose.rightWrist.x).toFixed(2);
-  scoreRightWrist = (result[0].pose.keypoints[10].score).toFixed(2);
-  console.log("Y = " + Y + " X = " + X + " score = " + scoreRightWrist);
+  if (result.length > 0) {
+    Y = (result[0].pose.rightWrist.y).toFixed(2);
+    X = (result[0].pose.rightWrist.x).toFixed(2);
+    scoreRightWrist = (result[0].pose.keypoints[10].score).toFixed(2);
+    console.log("Y = " + Y + " X = " + X + " score = " + scoreRightWrist);
   }
 }
 
@@ -61,53 +61,53 @@ function start() {
 
 function draw() {
 
-  if(gameStatus == true) {
+  if (gameStatus == true) {
+
+    background(0);
 
     image(video, 0, 0, 700, 600);
 
-  background(0);
+    fill("black");
+    stroke("black");
+    rect(680, 0, 20, 700);
 
-  fill("black");
-  stroke("black");
-  rect(680, 0, 20, 700);
+    fill("black");
+    stroke("black");
+    rect(0, 0, 20, 700);
 
-  fill("black");
-  stroke("black");
-  rect(0, 0, 20, 700);
+    if (scoreRightWrist > 0.1) {
+      fill("red");
+      stroke("red");
+      circle(X, Y, 200);
+    }
 
-  if (scoreRightWrist > 0.2) {
-  fill("red");
-  stroke("red");
-  circle(X, Y, 500);
-  }
+    //funtion paddleInCanvas call 
+    paddleInCanvas();
 
-  //funtion paddleInCanvas call 
-  paddleInCanvas();
-
-  //left paddle
-  fill(250, 0, 0);
-  stroke(0, 0, 250);
-  strokeWeight(0.5);
-  paddle1Y = mouseY;
-  rect(paddle1X, paddle1Y, paddle1, paddle1Height, 100);
+    //left paddle
+    fill(250, 0, 0);
+    stroke(0, 0, 250);
+    strokeWeight(0.5);
+    paddle1Y = Y;
+    rect(paddle1X, paddle1Y, paddle1, paddle1Height, 100);
 
 
-  //pc computer paddle
-  fill("#FFA500");
-  stroke("#FFA500");
-  var paddle2y = ball.y - paddle2Height / 2; rect(paddle2Y, paddle2y, paddle2, paddle2Height, 100);
+    //pc computer paddle
+    fill("#FFA500");
+    stroke("#FFA500");
+    var paddle2y = ball.y - paddle2Height / 2; rect(paddle2Y, paddle2y, paddle2, paddle2Height, 100);
 
-  //function midline call
-  midline();
+    //function midline call
+    midline();
 
-  //funtion drawScore call 
-  drawScore();
+    //funtion drawScore call 
+    drawScore();
 
-  //function models call  
-  models();
+    //function models call  
+    models();
 
-  //function move call which in very important
-  move();
+    //function move call which in very important
+    move();
   }
 }
 
@@ -116,7 +116,7 @@ function draw() {
 //function reset when ball does not come in the contact of paddle
 function reset() {
   ball.x = width / 2 + 100,
-  ball.y = height / 2 + 100;
+    ball.y = height / 2 + 100;
   ball.dx = 3;
   ball.dy = 3;
 }
@@ -199,10 +199,10 @@ function models() {
 
 //this function help to not go te paddle out of canvas
 function paddleInCanvas() {
-  if (mouseY + paddle1Height > height) {
-    mouseY = height - paddle1Height;
+  if (Y + paddle1Height > height) {
+    Y = height - paddle1Height;
   }
-  if (mouseY < 0) {
-    mouseY = 0;
+  if (Y < 0) {
+    Y = 0;
   }
 }
