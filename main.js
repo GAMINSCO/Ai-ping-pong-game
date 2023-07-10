@@ -26,7 +26,10 @@ var X = "";
 var gameStatus = false;
 var scoreRightWrist = "";
 
-
+function preload() {
+  BTP = loadSound("ball_touch_paddel.wav");
+  miss = loadSound("missed.wav");
+}
 
 function setup() {
   var canvas = createCanvas(700, 600);
@@ -43,10 +46,10 @@ function setup() {
 
 function gotPoses(result) {
   if (result.length > 0) {
-    Y = (result[0].pose.rightWrist.y).toFixed(2);
+    Y = result[0].pose.rightWrist.y;
     X = (result[0].pose.rightWrist.x).toFixed(2);
     scoreRightWrist = (result[0].pose.keypoints[10].score).toFixed(2);
-    console.log("Y = " + Y + " X = " + X + " score = " + scoreRightWrist);
+    // console.log("Y = " + Y + " X = " + X + " score = " + scoreRightWrist);
   }
 }
 
@@ -55,8 +58,9 @@ function modelLoaded() {
 }
 
 function start() {
-  document.getElementById("status").innerHTML = "Starting Game";
+  document.getElementById("status").innerHTML = "Starting Game!";
   gameStatus = true;
+  document.getElementById("status").innerHTML = "Game Running!";
 }
 
 function draw() {
@@ -116,7 +120,7 @@ function draw() {
 //function reset when ball does not come in the contact of paddle
 function reset() {
   ball.x = width / 2 + 100,
-    ball.y = height / 2 + 100;
+  ball.y = height / 2 + 100;
   ball.dx = 3;
   ball.dy = 3;
 }
@@ -161,9 +165,11 @@ function move() {
     if (ball.y >= paddle1Y && ball.y <= paddle1Y + paddle1Height) {
       ball.dx = -ball.dx + 0.5;
       playerscore++;
+      BTP.play();
     }
     else {
       pcscore++;
+      miss.play();
       reset();
       navigator.vibrate(100);
     }
@@ -176,13 +182,18 @@ function move() {
     stroke("white");
     textSize(25)
     text("Game Over!☹☹", width / 2, height / 2);
-    text("Reload The Page!", width / 2, height / 2 + 30)
+    text("Preass the Restart Button to Restart the Game!", width / 2, height / 2 + 30)
     noLoop();
     pcscore = 0;
   }
   if (ball.y + ball.r > height || ball.y - ball.r < 0) {
     ball.dy = - ball.dy;
   }
+}
+
+function restart() {
+  pcscore = 0;
+  playerscore = 0;
 }
 
 
